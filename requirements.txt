@@ -1,0 +1,39 @@
+# FastAPI and ASGI server
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# Database
+sqlalchemy==2.0.25
+asyncpg==0.29.0
+alembic==1.13.1
+
+# Pydantic for settings management
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Azure SDK
+azure-storage-blob==12.19.0
+azure-cognitiveservices-speech==1.35.0
+openai==1.10.0  # For Azure OpenAI
+
+# HTTP client for Dynamics 365
+httpx==0.26.0
+
+# Queue/task management (optional for MVP, using asyncio)
+redis==5.0.1
+celery==5.3.6
+
+# Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.0
+
+# Logging and monitoring
+python-json-logger==2.0.7
+
+# Development and testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+black==24.1.1
+flake8==7.0.0

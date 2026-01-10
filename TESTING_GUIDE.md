@@ -65,14 +65,14 @@ INFO:     Application startup complete.
 ## Step 3: Login
 
 **Use default credentials:**
-- Username: `demo@biotrack.ca`
-- Password: `bioTrack+test`
+- Username: `demo@example.com`
+- Password: `demo123`
 
-Click **"Sign In"**
+Click **"Login to Dashboard"**
 
 **Expected Result:**
 - Redirects to dashboard
-- Shows "Welcome, bioTrack+ Demo" (or similar)
+- Shows "Welcome, Demo Farm" (or similar)
 - Shows empty recordings list
 - Shows recording interface (microphone or upload)
 
@@ -212,7 +212,7 @@ You should see your recording with all the transcribed text and extracted data s
 | **TRANSCRIBING** | Converting speech to text | Whisper is processing |
 | **PROCESSING** | Extracting data | Groq AI is analyzing |
 | **SYNCING** | Sending to Dynamics | Calling Dynamics 365 API |
-| **SYNCED** | ✅ Complete! | Animal created in bioTrack+ |
+| **SYNCED** | ✅ Complete! | Animal created in Dynamics 365 |
 | **ERROR** | ❌ Failed | Check logs for details |
 
 ---
@@ -333,7 +333,7 @@ You upload a file saying: *"Add a new bull, ear tag 9999, born March 15th, 2024"
 1. Check server logs for specific error
 2. Review this guide's "Common Issues" section
 3. Verify .env file has all required values
-4. Check FIRST_TIME_SETUP.md for installation steps
+4. Check SETUP.md for installation steps
 5. Review API_SETUP_GUIDE.md for API key setup
 
 ---
@@ -383,7 +383,7 @@ Then upload test.wav/test.aiff through the dashboard!
 
 4. **Ready for Production!**
    - See COMPLETE_HOSTING_GUIDE.md for deployment
-   - See CLIENT_HANDOVER.md for user guide
+   - See README.md for overview
 
 ---
 

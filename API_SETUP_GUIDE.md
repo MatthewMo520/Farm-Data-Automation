@@ -75,7 +75,7 @@ Follow the **AZURE_SETUP_QUICK_GUIDE.md** file for detailed steps.
 ### Save to .env File
 
 ```bash
-DYNAMICS_BASE_URL=https://agsights.crm3.dynamics.com
+DYNAMICS_BASE_URL=https://yourorg.crm3.dynamics.com
 DYNAMICS_CLIENT_ID=your_application_client_id
 DYNAMICS_CLIENT_SECRET=your_client_secret
 DYNAMICS_TENANT_ID=your_tenant_id
@@ -324,7 +324,7 @@ GROQ_TEMPERATURE=0.1
 # ========================================
 # DYNAMICS 365 (REQUIRED)
 # ========================================
-DYNAMICS_BASE_URL=https://agsights.crm3.dynamics.com
+DYNAMICS_BASE_URL=https://yourorg.crm3.dynamics.com
 DYNAMICS_CLIENT_ID=your_azure_ad_app_client_id
 DYNAMICS_CLIENT_SECRET=your_azure_ad_app_client_secret
 DYNAMICS_TENANT_ID=your_azure_ad_tenant_id

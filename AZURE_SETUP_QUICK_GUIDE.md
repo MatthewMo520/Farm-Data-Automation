@@ -130,7 +130,7 @@ SET
     dynamics_client_id = 'PASTE_YOUR_APPLICATION_ID_HERE',
     dynamics_client_secret = 'PASTE_YOUR_CLIENT_SECRET_HERE',
     dynamics_tenant_id = 'PASTE_YOUR_TENANT_ID_HERE'
-WHERE name = 'bioTrack+ Demo';
+WHERE name = 'Demo Farm';
 ```
 
 ### Option 2: Update .env File

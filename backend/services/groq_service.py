@@ -1,8 +1,8 @@
 """
-Azure OpenAI Service
-Handles AI-powered data extraction and entity classification
+Groq AI Service
+Handles AI-powered data extraction and entity classification using Groq API
 """
-from openai import AsyncAzureOpenAI
+from groq import AsyncGroq
 from backend.core.config import settings
 import logging
 import json
@@ -11,16 +11,13 @@ from typing import Dict, List
 logger = logging.getLogger(__name__)
 
 
-class AzureOpenAIService:
-    """Service for Azure OpenAI data extraction"""
+class GroqService:
+    """Service for Groq AI data extraction"""
 
     def __init__(self):
-        self.client = AsyncAzureOpenAI(
-            api_key=settings.AZURE_OPENAI_KEY,
-            api_version=settings.AZURE_OPENAI_API_VERSION,
-            azure_endpoint=settings.AZURE_OPENAI_ENDPOINT
-        )
-        self.deployment_name = settings.AZURE_OPENAI_DEPLOYMENT_NAME
+        self.client = AsyncGroq(api_key=settings.GROQ_API_KEY)
+        self.model = settings.GROQ_MODEL
+        self.temperature = settings.GROQ_TEMPERATURE
 
     async def extract_data_from_transcription(
         self,
@@ -28,7 +25,7 @@ class AzureOpenAIService:
         schema_mappings: List[Dict]
     ) -> Dict:
         """
-        Extract structured data from transcription text using AI
+        Extract structured data from transcription text using Groq AI
 
         Args:
             transcription: Transcribed text from voice recording
@@ -74,15 +71,15 @@ Extract the data and return ONLY a JSON object with this structure:
     "notes": "any additional context or uncertainties"
 }}"""
 
-            # Call Azure OpenAI
+            # Call Groq API
             response = await self.client.chat.completions.create(
-                model=self.deployment_name,
+                model=self.model,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
-                temperature=0.3,  # Lower temperature for more consistent extraction
-                response_format={"type": "json_object"}
+                temperature=self.temperature,
+                response_format={"type": "json_object"}  # Force JSON output
             )
 
             # Parse response
@@ -94,7 +91,7 @@ Extract the data and return ONLY a JSON object with this structure:
             return result
 
         except Exception as e:
-            logger.error(f"Error during data extraction: {str(e)}")
+            logger.error(f"Error during Groq data extraction: {str(e)}")
             return {
                 "entity_type": "unknown",
                 "confidence": "LOW",
@@ -183,3 +180,55 @@ Keywords: {keywords_list}
             return True  # Unknown type, skip validation
 
         return isinstance(value, expected_python_type)
+
+    async def extract_with_retry(
+        self,
+        transcription: str,
+        schema_mappings: List[Dict],
+        max_retries: int = 3
+    ) -> Dict:
+        """
+        Extract data with retry logic for rate limiting
+
+        Args:
+            transcription: Transcribed text
+            schema_mappings: Available schemas
+            max_retries: Maximum number of retry attempts
+
+        Returns:
+            Extraction result
+        """
+        import asyncio
+
+        for attempt in range(max_retries):
+            try:
+                result = await self.extract_data_from_transcription(transcription, schema_mappings)
+
+                # If we got an error in the result but no exception, check if it's a rate limit
+                if result.get("error") and "rate" in result.get("error", "").lower():
+                    if attempt < max_retries - 1:
+                        # Exponential backoff: wait 2^attempt seconds
+                        wait_time = 2 ** attempt
+                        logger.warning(f"Rate limit hit, retrying in {wait_time} seconds...")
+                        await asyncio.sleep(wait_time)
+                        continue
+
+                return result
+
+            except Exception as e:
+                error_message = str(e).lower()
+                if "rate" in error_message and attempt < max_retries - 1:
+                    wait_time = 2 ** attempt
+                    logger.warning(f"Rate limit exception, retrying in {wait_time} seconds...")
+                    await asyncio.sleep(wait_time)
+                else:
+                    # Non-rate-limit error or final attempt
+                    raise
+
+        # If we exhausted retries
+        return {
+            "entity_type": "unknown",
+            "confidence": "LOW",
+            "extracted_data": {},
+            "error": "Max retries exceeded due to rate limiting"
+        }

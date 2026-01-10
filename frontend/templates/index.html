@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Data Automation - Dashboard</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="login-header">
+                <h2>🌾 Farm Voice Automation</h2>
+                <p>Login to Dashboard</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username / Email</label>
+                    <input type="email" id="username" placeholder="Enter your email" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn-primary">Login to Dashboard</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>🌾 Farm Data Automation</h1>
+                    <p class="header-subtitle">Voice-Powered Dynamics 365 Integration</p>
+                </div>
+                <div class="user-info">
+                    <span id="clientName" class="client-badge"></span>
+                    <button id="logoutBtn" class="btn-secondary">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <h2>Add Animal Record</h2>
+
+                <!-- Recording Tabs -->
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="upload">Upload Recording</button>
+                    <button class="tab-btn" data-tab="record">Record Audio</button>
+                </div>
+
+                <!-- Upload Tab -->
+                <div id="uploadTab" class="tab-content active">
+                    <div class="upload-box">
+                        <input type="file" id="fileInput" accept="audio/*,.m4a,.mp3,.wav,.ogg" hidden>
+                        <div class="upload-area" id="uploadArea">
+                            <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M32 8v40M16 24l16-16 16 16"/>
+                            </svg>
+                            <p>Click to upload or drag and drop</p>
+                            <span>Supported: MP3, WAV, M4A, OGG</span>
+                        </div>
+                        <button id="uploadBtn" class="btn-primary" disabled>Upload & Process</button>
+                    </div>
+                </div>
+
+                <!-- Record Tab -->
+                <div id="recordTab" class="tab-content">
+                    <div class="record-box">
+                        <div class="record-controls">
+                            <button id="startRecordBtn" class="btn-record">
+                                <span class="record-icon">🎤</span>
+                                Start Recording
+                            </button>
+                            <button id="stopRecordBtn" class="btn-stop hidden">
+                                <span class="stop-icon">⏹</span>
+                                Stop Recording
+                            </button>
+                        </div>
+                        <div id="recordingStatus" class="recording-status hidden">
+                            <span class="pulse"></span>
+                            Recording... <span id="recordingTime">0:00</span>
+                        </div>
+                        <audio id="audioPlayback" controls class="hidden"></audio>
+                        <button id="submitRecordBtn" class="btn-primary hidden">Submit Recording</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recordings List -->
+            <section class="recordings-section">
+                <div class="section-header">
+                    <h2>Recent Recordings</h2>
+                    <button id="refreshBtn" class="btn-secondary">🔄 Refresh</button>
+                </div>
+                <div id="recordingsList" class="recordings-list">
+                    <div class="loading">Loading recordings...</div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <div class="footer-content">
+                <p>&copy; 2025 Farm Data Automation | Powered by OpenAI Whisper & Groq AI</p>
+                <p class="footer-note">Cost-effective voice automation for modern agriculture</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Missing Fields Modal -->
+    <div id="missingFieldsModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚠️ Missing Required Information</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="missingFieldsMessage"></p>
+                <form id="missingFieldsForm">
+                    <div id="missingFieldsContainer"></div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary close-modal">Cancel</button>
+                        <button type="submit" class="btn-primary">Submit Information</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="../static/js/app.js"></script>
+</body>
+</html>

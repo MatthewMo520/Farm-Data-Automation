@@ -1,6 +1,105 @@
 """
-Microsoft Dynamics 365 Client
-Handles authentication and CRUD operations with Dynamics 365 Web API
+Microsoft Dynamics 365 Web API Client
+
+This module provides a client for interacting with Microsoft Dynamics 365 (bioTrack+)
+using the Dynamics 365 Web API (OData v4.0).
+
+Key Features:
+    - OAuth 2.0 authentication via Azure AD
+    - Automatic token refresh (tokens expire after 1 hour)
+    - Full CRUD operations (Create, Read, Update, Delete)
+    - OData query support ($filter, $select, $top)
+    - Async/await pattern for non-blocking I/O
+    - Comprehensive error handling and logging
+
+Authentication Flow:
+    1. App registration in Azure AD (see .env.example for setup steps)
+    2. Client credentials flow (client_id + client_secret)
+    3. Access token retrieved from Microsoft login endpoint
+    4. Token cached and auto-refreshed before expiration
+    5. Token included in all API requests via Bearer authentication
+
+API Endpoint Structure:
+    Base URL: https://your-org.crm.dynamics.com
+    API Path: /api/data/v9.2/{entity_name}
+    Example: https://agsights.crm3.dynamics.com/api/data/v9.2/biotrack_animals
+
+Required Azure AD Permissions:
+    - Dynamics CRM > Delegated > user_impersonation
+    - Application must be added as a user in Dynamics 365 with appropriate security roles
+
+Common Entity Names (bioTrack+):
+    - biotrack_animals: Animal records
+    - biotrack_farms: Farm/location records
+    - biotrack_treatments: Veterinary treatments
+    - accounts: Customer accounts
+    - contacts: Contact records
+
+Error Handling:
+    - 401 Unauthorized: Invalid credentials or expired token
+    - 403 Forbidden: Insufficient permissions in Dynamics
+    - 404 Not Found: Entity or record doesn't exist
+    - 400 Bad Request: Invalid data format or required fields missing
+    - All HTTP errors raise httpx.HTTPStatusError with detailed message
+
+Usage Example:
+    client = DynamicsClient(
+        base_url="https://your-org.crm.dynamics.com",
+        client_id="your-app-client-id",
+        client_secret="your-app-secret",
+        tenant_id="your-tenant-id"
+    )
+
+    # Create an animal record
+    result = await client.create_record(
+        entity_name="biotrack_animals",
+        data={
+            "ear_tag": "12345",
+            "species": "Beef Cattle",
+            "birth_date": "2024-01-15",
+            "sex": "Heifer"
+        }
+    )
+
+    record_id = result["id"]  # Store this in database
+    print(f"Created animal record: {record_id}")
+
+    # Retrieve the record
+    animal = await client.get_record("biotrack_animals", record_id)
+
+    # Update the record
+    await client.update_record(
+        "biotrack_animals",
+        record_id,
+        {"location": "Pasture 5"}
+    )
+
+    # Query records
+    animals = await client.query_records(
+        "biotrack_animals",
+        filter_query="species eq 'Beef Cattle'",
+        select_fields=["ear_tag", "birth_date"],
+        top=50
+    )
+
+Security Notes:
+    - Client secrets should be stored securely (use environment variables)
+    - Tokens are stored in memory only (not persisted to disk)
+    - Use HTTPS for all Dynamics API communication
+    - Consider encrypting client_secret in database for multi-tenant setups
+
+Performance:
+    - Token cached for 1 hour (minus 5-minute buffer for safety)
+    - Async operations don't block other processing
+    - Consider implementing connection pooling for high-volume scenarios
+
+Documentation:
+    - Dynamics 365 Web API: https://docs.microsoft.com/en-us/dynamics365/customer-engagement/web-api/
+    - OData v4.0: https://www.odata.org/documentation/
+    - Azure AD Authentication: https://docs.microsoft.com/en-us/azure/active-directory/develop/
+
+Author: Farm Data Automation Team
+Version: 2.0 (Post-Azure migration)
 """
 import httpx
 from typing import Dict, Optional

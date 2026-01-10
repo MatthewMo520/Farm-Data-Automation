@@ -31,7 +31,8 @@ class Recording(Base):
 
     # File information
     filename = Column(String(500), nullable=False)
-    blob_url = Column(Text, nullable=False)
+    blob_url = Column(Text, nullable=True)  # Legacy Azure storage (nullable for migration)
+    file_path = Column(Text, nullable=True)  # New local storage path
     file_size = Column(Integer)
     content_type = Column(String(100))
 

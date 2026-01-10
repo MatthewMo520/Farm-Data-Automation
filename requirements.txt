@@ -1,39 +1,49 @@
 # FastAPI and ASGI server
-fastapi==0.109.0
-uvicorn[standard]==0.27.0
-python-multipart==0.0.6
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
 
 # Database
-sqlalchemy==2.0.25
-asyncpg==0.29.0
-alembic==1.13.1
+sqlalchemy==2.0.36
+asyncpg==0.30.0
+alembic==1.14.0
+greenlet==3.2.4
+aiosqlite==0.21.0
+psycopg2-binary==2.9.9  # For PostgreSQL in production
 
 # Pydantic for settings management
-pydantic==2.5.3
-pydantic-settings==2.1.0
+pydantic==2.10.6
+pydantic-settings==2.7.1
 
-# Azure SDK
-azure-storage-blob==12.19.0
-azure-cognitiveservices-speech==1.35.0
-openai==1.10.0  # For Azure OpenAI
+# AI Services
+openai==1.59.6  # For OpenAI Whisper API (optional - only if WHISPER_MODE=api)
+openai-whisper  # For FREE local Whisper transcription (WHISPER_MODE=local) - RECOMMENDED!
+groq==0.4.1  # For FREE AI data extraction (14,400 requests/day)
+
+# File operations
+aiofiles==23.2.1  # Async file operations for local storage
+
+# Azure SDK (Legacy - can be removed after migration confirmed)
+# azure-storage-blob==12.24.0
+# azure-cognitiveservices-speech==1.41.1
 
 # HTTP client for Dynamics 365
-httpx==0.26.0
+httpx==0.28.1
 
 # Queue/task management (optional for MVP, using asyncio)
-redis==5.0.1
-celery==5.3.6
+redis==5.2.1
+celery==5.4.0
 
 # Security
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-python-dotenv==1.0.0
+python-dotenv==1.0.1
 
 # Logging and monitoring
-python-json-logger==2.0.7
+python-json-logger==3.2.1
 
 # Development and testing
-pytest==7.4.4
-pytest-asyncio==0.23.3
-black==24.1.1
-flake8==7.0.0
+pytest==8.3.4
+pytest-asyncio==0.24.0
+black==24.10.0
+flake8==7.1.1

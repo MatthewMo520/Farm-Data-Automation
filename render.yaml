@@ -1,0 +1,34 @@
+services:
+  # FastAPI Backend + Frontend
+  - type: web
+    name: farm-data-automation
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python scripts/seed_demo_client.py && uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: farm-data-db
+          property: connectionString
+      - key: WHISPER_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: LOCAL_STORAGE_PATH
+        value: /opt/render/project/storage/recordings
+      - key: WHISPER_MODEL
+        value: whisper-1
+      - key: GROQ_MODEL
+        value: llama-3.1-70b-versatile
+      - key: GROQ_TEMPERATURE
+        value: 0.1
+      - key: ENVIRONMENT
+        value: production
+
+databases:
+  - name: farm-data-db
+    databaseName: farm_data_automation
+    user: farm_data_user
+    plan: free
